@@ -62,7 +62,7 @@ func TestGetRules(t *testing.T) {
 			}))
 			defer server.Close()
 
-			e := New(&Options{})
+			e := New()
 			e.Client.baseURL = server.URL
 			rules, err := e.GetRules()
 

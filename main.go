@@ -13,10 +13,10 @@ const (
 )
 
 func main() {
-	er := easyredir.New(&easyredir.Options{
-		APIKey:    apiKey,
-		APISecret: apiSecret,
-	})
+	er := easyredir.New(
+    easyredir.WithAPIKey(apiKey),
+    easyredir.WithAPISecret(apiSecret),
+	)
 
 	rules, err := er.GetRules()
   if err != nil {

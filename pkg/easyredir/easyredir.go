@@ -14,8 +14,8 @@ type EasyRedir struct {
 }
 
 type Options struct {
-	APIKey    string
-	APISecret string
+	apiKey    string
+	apiSecret string
 }
 
 type Client struct {
@@ -58,17 +58,34 @@ const (
 	baseURLV1 = "https://api.easyredir.com/v1"
 )
 
-func New(opts *Options) (e EasyRedir) {
+func New(options ...func(*Options)) (e EasyRedir) {
+  opts := &Options{}
+  for _, o := range options {
+    o(opts)
+  }
+
 	e.Client = &Client{
 		baseURL:    baseURLV1,
-		apiKey:     opts.APIKey,
-		apiSecret:  opts.APISecret,
+		apiKey:     opts.apiKey,
+		apiSecret:  opts.apiSecret,
 		HTTPClient: &http.Client{},
 	}
 
 	e.Rules = &Rules{}
 
 	return e
+}
+
+func WithAPIKey(key string) func(*Options) {
+  return func(o *Options) {
+    o.apiKey = key
+  }
+}
+
+func WithAPISecret(secret string) func(*Options) {
+  return func(o *Options) {
+    o.apiSecret = secret
+  }
 }
 
 func (e *EasyRedir) GetRules() (rules *Rules, err error) {
