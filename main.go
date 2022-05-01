@@ -6,21 +6,21 @@ import (
 
 	"http-testing/pkg/easyredir"
 
-  "github.com/ilyakaznacheev/cleanenv"
+	"github.com/ilyakaznacheev/cleanenv"
 )
 
 type Config struct {
-  APIKey    string  `env:"EASYREDIR_API_KEY"`
-  APISecret string  `env:"EASYREDIR_API_SECRET"`
+	APIKey    string `env:"EASYREDIR_API_KEY"`
+	APISecret string `env:"EASYREDIR_API_SECRET"`
 }
 
 func main() {
-  var cfg Config
+	var cfg Config
 
-  err := cleanenv.ReadConfig(".env", &cfg)
-  if err != nil {
-    log.Fatal("unable to read configuration")
-  }
+	err := cleanenv.ReadConfig(".env", &cfg)
+	if err != nil {
+		log.Fatal("unable to read configuration")
+	}
 
 	er := easyredir.New(
 		easyredir.WithAPIKey(cfg.APIKey),
