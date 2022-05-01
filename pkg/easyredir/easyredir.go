@@ -3,8 +3,9 @@ package easyredir
 import (
 	"encoding/json"
 	"fmt"
-	_ "github.com/davecgh/go-spew/spew"
 	"net/http"
+
+	_ "github.com/davecgh/go-spew/spew"
 )
 
 type EasyRedir struct {
