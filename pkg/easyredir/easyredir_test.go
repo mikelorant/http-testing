@@ -62,19 +62,16 @@ func TestGetRules(t *testing.T) {
 			}))
 			defer server.Close()
 
-			e := New(&Options{
-				APIKey:    "",
-				APISecret: "",
-			})
+			e := New(&Options{})
 			e.Client.baseURL = server.URL
-			err = e.GetRules()
+			rules, err := e.GetRules()
 
 			IDs := []string{}
-			for _, rd := range e.Rules.Data {
+			for _, rd := range rules.Data {
 				IDs = append(IDs, rd.ID)
 			}
 
-			assert.Equal(tt.wantRules, len(e.Rules.Data))
+			assert.Equal(tt.wantRules, len(rules.Data))
 			assert.Equal(tt.wantIDs, IDs)
 			if tt.wantError != nil {
 				assert.EqualError(err, tt.wantError.Error())

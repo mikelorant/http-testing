@@ -1,6 +1,9 @@
 package main
 
 import (
+  "fmt"
+  "log"
+
 	"http-testing/pkg/easyredir"
 )
 
@@ -14,5 +17,11 @@ func main() {
 		APIKey:    apiKey,
 		APISecret: apiSecret,
 	})
-	er.GetRules()
+
+	rules, err := er.GetRules()
+  if err != nil {
+    log.Fatal("unable to get rules")
+  }
+
+  fmt.Println(rules)
 }
