@@ -1,0 +1,10 @@
+{
+  "data": [],
+  "meta": {
+    "has_more": true
+  },
+  "links": {
+    "next": "/v1/rules?starting_after=abc-def",
+    "prev": "/v1/rules?ending_before=abc-def"
+  }
+}
