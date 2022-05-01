@@ -133,14 +133,14 @@ func (cl *Client) sendRequest(url string) (body []byte, err error) {
 	return body, nil
 }
 
-func (rs *Rules) String() (s string) {
+func (rs *Rules) String() (str string) {
 	var sb strings.Builder
 
 	for _, r := range rs.Data {
 		fmt.Fprintf(&sb, "%s: %s --> %s\n", r.ID, r.Attributes.SourceURLs, r.Attributes.TargetURL)
 	}
 
-	s = sb.String()
+	str = sb.String()
 
-	return s
+	return str
 }
