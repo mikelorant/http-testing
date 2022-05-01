@@ -1,8 +1,8 @@
 package main
 
 import (
-  "fmt"
-  "log"
+	"fmt"
+	"log"
 
 	"http-testing/pkg/easyredir"
 )
@@ -14,14 +14,14 @@ const (
 
 func main() {
 	er := easyredir.New(
-    easyredir.WithAPIKey(apiKey),
-    easyredir.WithAPISecret(apiSecret),
+		easyredir.WithAPIKey(apiKey),
+		easyredir.WithAPISecret(apiSecret),
 	)
 
 	rules, err := er.GetRules()
-  if err != nil {
-    log.Fatal("unable to get rules")
-  }
+	if err != nil {
+		log.Fatal("unable to get rules")
+	}
 
-  fmt.Println(rules)
+	fmt.Println(rules)
 }

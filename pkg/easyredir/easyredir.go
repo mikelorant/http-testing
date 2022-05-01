@@ -3,9 +3,9 @@ package easyredir
 import (
 	"encoding/json"
 	"fmt"
+	"io"
 	"net/http"
-  "io"
-  "strings"
+	"strings"
 )
 
 type EasyRedir struct {
@@ -22,7 +22,7 @@ type Client struct {
 	baseURL    string
 	apiKey     string
 	apiSecret  string
-	HTTPClient *http.Client
+	httpClient *http.Client
 }
 
 type Rules struct {
@@ -59,16 +59,16 @@ const (
 )
 
 func New(options ...func(*Options)) (e EasyRedir) {
-  opts := &Options{}
-  for _, o := range options {
-    o(opts)
-  }
+	opts := &Options{}
+	for _, o := range options {
+		o(opts)
+	}
 
 	e.Client = &Client{
 		baseURL:    baseURLV1,
 		apiKey:     opts.apiKey,
 		apiSecret:  opts.apiSecret,
-		HTTPClient: &http.Client{},
+		httpClient: &http.Client{},
 	}
 
 	e.Rules = &Rules{}
@@ -77,15 +77,15 @@ func New(options ...func(*Options)) (e EasyRedir) {
 }
 
 func WithAPIKey(key string) func(*Options) {
-  return func(o *Options) {
-    o.apiKey = key
-  }
+	return func(o *Options) {
+		o.apiKey = key
+	}
 }
 
 func WithAPISecret(secret string) func(*Options) {
-  return func(o *Options) {
-    o.apiSecret = secret
-  }
+	return func(o *Options) {
+		o.apiSecret = secret
+	}
 }
 
 func (e *EasyRedir) GetRules() (rules *Rules, err error) {
@@ -99,10 +99,10 @@ func (e *EasyRedir) GetRules() (rules *Rules, err error) {
 }
 
 func (cl *Client) getJSON(url string, v interface{}) (err error) {
-  body, err := cl.sendRequest(url)
-  if err != nil {
-    return fmt.Errorf("unable to send request: %w", err)
-  }
+	body, err := cl.sendRequest(url)
+	if err != nil {
+		return fmt.Errorf("unable to send request: %w", err)
+	}
 
 	if err := json.Unmarshal(body, &v); err != nil {
 		return fmt.Errorf("unable to parse json: %w", err)
@@ -112,35 +112,35 @@ func (cl *Client) getJSON(url string, v interface{}) (err error) {
 }
 
 func (cl *Client) sendRequest(url string) (body []byte, err error) {
-  req, err := http.NewRequest(http.MethodGet, url, nil)
-  if err != nil {
-    return nil, fmt.Errorf("unable to create a new request: %w", err)
-  }
+	req, err := http.NewRequest(http.MethodGet, url, nil)
+	if err != nil {
+		return nil, fmt.Errorf("unable to create a new request: %w", err)
+	}
 	req.SetBasicAuth(cl.apiKey, cl.apiSecret)
 
-	res, err := cl.HTTPClient.Do(req)
+	res, err := cl.httpClient.Do(req)
 	if err != nil {
 		return nil, fmt.Errorf("unable to do request: %w", err)
 	}
 
 	defer res.Body.Close()
 
-  body, err = io.ReadAll(res.Body)
-  if err != nil {
-    return nil, fmt.Errorf("unable to read body: %w", err)
-  }
+	body, err = io.ReadAll(res.Body)
+	if err != nil {
+		return nil, fmt.Errorf("unable to read body: %w", err)
+	}
 
-  return body, nil
+	return body, nil
 }
 
 func (rs *Rules) String() (s string) {
-  var sb strings.Builder
+	var sb strings.Builder
 
-  for _, r := range rs.Data {
-    fmt.Fprintf(&sb, "%s: %s --> %s\n", r.ID, r.Attributes.SourceURLs, r.Attributes.TargetURL)
-  }
+	for _, r := range rs.Data {
+		fmt.Fprintf(&sb, "%s: %s --> %s\n", r.ID, r.Attributes.SourceURLs, r.Attributes.TargetURL)
+	}
 
-  s = sb.String()
+	s = sb.String()
 
-  return s
+	return s
 }
