@@ -1,18 +1,18 @@
 package main
 
 import (
-  "http-testing/pkg/easyredir"
+	"http-testing/pkg/easyredir"
 )
 
 const (
-  apiKey    string = "***REMOVED***"
-  apiSecret string = "***REMOVED***"
+	apiKey    string = "***REMOVED***"
+	apiSecret string = "***REMOVED***"
 )
 
 func main() {
-  er := easyredir.New(&easyredir.Options{
-    APIKey: apiKey,
-    APISecret: apiSecret,
-  })
-  er.GetRules()
+	er := easyredir.New(&easyredir.Options{
+		APIKey:    apiKey,
+		APISecret: apiSecret,
+	})
+	er.GetRules()
 }

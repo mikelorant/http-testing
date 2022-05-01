@@ -1,47 +1,47 @@
 package easyredir
 
 import (
-  "fmt"
-  "net/http"
-  "encoding/json"
-  _ "github.com/davecgh/go-spew/spew"
+	"encoding/json"
+	"fmt"
+	_ "github.com/davecgh/go-spew/spew"
+	"net/http"
 )
 
 type EasyRedir struct {
-  Client  *Client
-  Rules   *Rules
+	Client *Client
+	Rules  *Rules
 }
 
 type Options struct {
-  APIKey    string
-  APISecret string
+	APIKey    string
+	APISecret string
 }
 
 type Client struct {
-	baseURL     string
-	apiKey      string
-	apiSecret   string
-  HTTPClient  *http.Client
+	baseURL    string
+	apiKey     string
+	apiSecret  string
+	HTTPClient *http.Client
 }
 
 type Rules struct {
-  Data    []RulesData `type:"data"`
-  Meta    Meta        `type:"meta"`
-  Links   Links       `type:"links"`
+	Data  []RulesData `type:"data"`
+	Meta  Meta        `type:"meta"`
+	Links Links       `type:"links"`
 }
 
 type RulesData struct {
-  ID            string `json:"id"`
-  Type          string `json:"type"`
-  Attributes    RulesAttributes  `json:"attributes"`
+	ID         string          `json:"id"`
+	Type       string          `json:"type"`
+	Attributes RulesAttributes `json:"attributes"`
 }
 
 type RulesAttributes struct {
-  ForwardParams bool     `json:"forward_params"`
-  ForwardPath   bool     `json:"forward_path"`
-  ResponseType  string   `json:"response_type"`
-  SourceURLs    []string `json:"source_urls"`
-  TargetURL     string   `json:"target_url"`
+	ForwardParams bool     `json:"forward_params"`
+	ForwardPath   bool     `json:"forward_path"`
+	ResponseType  string   `json:"response_type"`
+	SourceURLs    []string `json:"source_urls"`
+	TargetURL     string   `json:"target_url"`
 }
 
 type Meta struct {
@@ -58,42 +58,42 @@ const (
 )
 
 func New(opts *Options) (e EasyRedir) {
-  e.Client = &Client{
-    baseURL: baseURLV1,
-    apiKey: opts.APIKey,
-    apiSecret: opts.APISecret,
-    HTTPClient: &http.Client{},
-  }
+	e.Client = &Client{
+		baseURL:    baseURLV1,
+		apiKey:     opts.APIKey,
+		apiSecret:  opts.APISecret,
+		HTTPClient: &http.Client{},
+	}
 
-  e.Rules = &Rules{}
+	e.Rules = &Rules{}
 
-  return e
+	return e
 }
 
 func (e *EasyRedir) GetRules() (err error) {
-  url := fmt.Sprintf("%s/rules", e.Client.baseURL)
+	url := fmt.Sprintf("%s/rules", e.Client.baseURL)
 
-  if err := e.Client.getJSON(url, e.Rules); err != nil {
-    return fmt.Errorf("unable to get rules: %w", err)
-  }
+	if err := e.Client.getJSON(url, e.Rules); err != nil {
+		return fmt.Errorf("unable to get rules: %w", err)
+	}
 
-  return nil
+	return nil
 }
 
 func (cl *Client) getJSON(url string, v interface{}) (err error) {
-  req, _ := http.NewRequest(http.MethodGet, url, nil)
-  req.SetBasicAuth(cl.apiKey, cl.apiSecret)
+	req, _ := http.NewRequest(http.MethodGet, url, nil)
+	req.SetBasicAuth(cl.apiKey, cl.apiSecret)
 
 	res, err := cl.HTTPClient.Do(req)
-  if err != nil {
-      return fmt.Errorf("unable to send request: %w", err)
-  }
+	if err != nil {
+		return fmt.Errorf("unable to send request: %w", err)
+	}
 
 	defer res.Body.Close()
 
-  if err := json.NewDecoder(res.Body).Decode(&v); err != nil {
-    return fmt.Errorf("unable to parse json: %w", err)
-  }
+	if err := json.NewDecoder(res.Body).Decode(&v); err != nil {
+		return fmt.Errorf("unable to parse json: %w", err)
+	}
 
-  return nil
+	return nil
 }
