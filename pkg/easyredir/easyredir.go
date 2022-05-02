@@ -125,6 +125,10 @@ func (cl *Client) sendRequest(url string) (body []byte, err error) {
 
 	defer res.Body.Close()
 
+	if res.StatusCode < http.StatusOK || res.StatusCode >= http.StatusBadRequest {
+		return nil, fmt.Errorf("received status code: %d", res.StatusCode)
+	}
+
 	body, err = io.ReadAll(res.Body)
 	if err != nil {
 		return nil, fmt.Errorf("unable to read body: %w", err)

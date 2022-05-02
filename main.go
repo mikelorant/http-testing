@@ -29,7 +29,7 @@ func main() {
 
 	rules, err := er.GetRules()
 	if err != nil {
-		log.Fatal("unable to get rules")
+		log.Fatal(err.Error())
 	}
 
 	fmt.Print(rules)
